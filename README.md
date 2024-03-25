@@ -30,6 +30,10 @@ Tools and Agent (general)
 API Agent and Planner
 
 - [OpenAPI | 🦜️🔗 Langchain](https://python.langchain.com/docs/integrations/toolkits/openapi)
+  - [langchain/libs/community/langchain_community/agent_toolkits/openapi at master · langchain-ai/langchain](https://github.com/langchain-ai/langchain/tree/master/libs/community/langchain_community/agent_toolkits/openapi)
+  - [langchain/libs/community/tests/unit_tests/tools/openapi at master · langchain-ai/langchain](https://github.com/langchain-ai/langchain/tree/master/libs/community/tests/unit_tests/tools/openapi)
+  - [langchain/docs/docs/integrations/toolkits/openapi.ipynb at master · langchain-ai/langchain](https://github.com/langchain-ai/langchain/blob/master/docs/docs/integrations/toolkits/openapi.ipynb)
+
 
 ### Papers
 

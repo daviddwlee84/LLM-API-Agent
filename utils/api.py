@@ -106,13 +106,14 @@ if __name__ == "__main__":
     manager = OpenAPIManager(
         "https://raw.githubusercontent.com/APIs-guru/openapi-directory/main/APIs/spotify.com/1.0.0/openapi.yaml"
     )
-    print(manager._spec)
-    print(type(manager._spec))
-    print(type(manager._raw_spec))
+    # print(manager._spec)
+    # print(type(manager._spec))
+    # print(type(manager._raw_spec))
     print(manager.spec_tokens)
     print(manager.spec_endpoints)
-    print(manager.raw_spec_endpoints)
+    # print(manager.raw_spec_endpoints)
     # import ipdb; ipdb.set_trace()
+
     # manager2 = OpenAPIManager(reduce_spec=False)
     # manager2.load_online_yaml("https://raw.githubusercontent.com/openai/openai-openapi/master/openapi.yaml")
     # print(manager2._spec)
@@ -148,9 +149,13 @@ if __name__ == "__main__":
     from langchain_community.agent_toolkits.openapi import planner
     from langchain_openai import AzureChatOpenAI
 
+    # https://stackoverflow.com/questions/75396481/openai-gpt-3-api-error-this-models-maximum-context-length-is-4097-tokens
     llm = AzureChatOpenAI(
         azure_deployment=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
         openai_api_version=os.getenv("OPENAI_API_VERSION"),
+        # max_tokens=16385,
+        # max_tokens=15000,
+        # max_tokens=10000,
     )
     print(llm)
 
@@ -165,18 +170,53 @@ if __name__ == "__main__":
         llm,
         # https://github.com/langchain-ai/langchain/pull/19493
         allow_dangerous_requests=True,
+        # agent_executor_kwargs=dict(handle_parsing_errors=True)
+        # agent_executor_kwargs=dict(return_intermediate_steps=True, handle_parsing_errors=True),
+        # agent_executor_kwargs=dict(return_intermediate_steps=True, handle_parsing_errors="Invalid output. Please call the API step by step.", max_iterations=2),
+        # agent_executor_kwargs=dict(return_intermediate_steps=True, handle_parsing_errors="Invalid output. Please call the API step by step. If successfully execute the plan then end it.", max_iterations=5),
+        agent_executor_kwargs=dict(
+            return_intermediate_steps=True,
+            # handle_parsing_errors="If successfully execute the plan then return summarize and end the plan. Otherwise, please call the API step by step.",
+            handle_parsing_errors='If successfully execute the plan then return "Final Answer: `summarize`". Otherwise, please call the API step by step.',
+            max_iterations=5,
+            # https://github.com/langchain-ai/langchain/issues/11405
+            # This is not how (I think) it work
+            # trim_intermediate_steps=16384,
+        ),
+        # BUG: Not working
+        max_context_length=16384,
     )
-    spotify_agent
-    print(spotify_agent)
+    # print(spotify_agent)
+    print(spotify_agent.return_intermediate_steps)
+    print(spotify_agent.handle_parsing_errors)
+    print(spotify_agent.max_iterations)
     print(len(spotify_agent.tools))
 
     import ipdb
 
     ipdb.set_trace()
     user_query = "give me a song I'd like, make it blues-ey (answer shortly)"
-    # openai.BadRequestError: Error code: 400 - {'error': {'message': "This model's maximum context length is 16384 tokens. However, your messages resulted in 27000 tokens. Please reduce the length of the messages.", 'type': 'invalid_request_error', 'param': 'messages', 'code': 'context_length_exceeded'}}
+    # BUG: openai.BadRequestError: Error code: 400 - {'error': {'message': "This model's maximum context length is 16384 tokens. However, your messages resulted in 27000 tokens. Please reduce the length of the messages.", 'type': 'invalid_request_error', 'param': 'messages', 'code': 'context_length_exceeded'}}
+    # BUG: openai.BadRequestError: Error code: 400 - {'error': {'message': "This model's maximum context length is 16384 tokens. However, you requested 18250 tokens (3250 in the messages, 15000 in the completion). Please reduce the length of the messages or completion.", 'type': 'invalid_request_error', 'param': 'messages', 'code': 'context_length_exceeded'}}
+    # BUG: openai.BadRequestError: Error code: 400 - {'error': {'message': "This model's maximum context length is 16384 tokens. However, your messages resulted in 31472 tokens. Please reduce the length of the messages.", 'type': 'invalid_request_error', 'param': 'messages', 'code': 'context_length_exceeded'}}
+
+    # BUG: langchain_core.exceptions.OutputParserException: Could not parse LLM output: `I need to get the available genre seeds first before I can make a recommendation request with the "blues" genre.`
+    # handle_parsing_errors: Union[
+    #     bool, str, Callable[[OutputParserException], str]
+    # ] = False
+    # """How to handle errors raised by the agent's output parser.
+    # Defaults to `False`, which raises the error.
+    # If `true`, the error will be sent back to the LLM as an observation.
+    # If a string, the string itself will be sent to the LLM as an observation.
+    # If a callable function, the function will be called with the exception
+    #  as an argument, and the result of that function will be passed to the agent
+    #   as an observation.
+    # """
     response = spotify_agent.invoke(user_query)
     print(response)
+
+    response2 = spotify_agent.invoke("Recommend a k-pop song for me for taking shower. Keep the track url in the response")
+    print(response2)
 
     import ipdb
 
