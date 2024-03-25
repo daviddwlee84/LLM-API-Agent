@@ -18,3 +18,9 @@ LangChain
 ### Financial API
 
 - [Polygon.io - Stock Market API](https://polygon.io/)
+
+### Financial LLM
+
+- [AI4Finance-Foundation/FinGPT: FinGPT: Open-Source Financial Large Language Models! Revolutionize 🔥 We release the trained model on HuggingFace.](https://github.com/AI4Finance-Foundation/FinGPT)
+  - [FinGPT (FinGPT)](https://huggingface.co/FinGPT)
+  - [[2306.06031] FinGPT: Open-Source Financial Large Language Models](https://arxiv.org/abs/2306.06031)

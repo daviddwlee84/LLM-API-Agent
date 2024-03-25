@@ -42,7 +42,7 @@ Tasks
     - [ ] Fix bug
   - [ ] JSON agent
 - [ ] Financial Agent
-  - [ ] Simple Polygon
+  - [X] Simple Polygon
     - [ ] Fix bug
   - [ ] LangGraph + Polygon
 
