@@ -12,6 +12,11 @@ import os
 class OpenAPIManager:
     """
     https://python.langchain.com/docs/integrations/toolkits/openapi
+
+    TODO:
+    1. (automatically) set auth header
+    2. RequestWrapper
+    3. Get Agent
     """
 
     _spec: ReducedOpenAPISpec
@@ -139,6 +144,39 @@ if __name__ == "__main__":
     print(headers)
     requests_wrapper = RequestsWrapper(headers=headers)
     print(requests_wrapper)
+
+    from langchain_community.agent_toolkits.openapi import planner
+    from langchain_openai import AzureChatOpenAI
+
+    llm = AzureChatOpenAI(
+        azure_deployment=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
+        openai_api_version=os.getenv("OPENAI_API_VERSION"),
+    )
+    print(llm)
+
+    from langchain.agents.agent import AgentExecutor
+
+    # ValueError: You must set allow_dangerous_requests to True to use this tool. Request scan be dangerous and can lead to security vulnerabilities. For example, users can ask a server to make a request to an internalserver. It's recommended to use requests through a proxy server and avoid accepting inputs from untrusted sources without proper sandboxing.Please see: https://python.langchain.com/docs/security for further security information.
+    # https://github.com/langchain-ai/langchain/issues/19440
+    # https://api.python.langchain.com/en/latest/agent_toolkits/langchain_community.agent_toolkits.openapi.toolkit.RequestsToolkit.html
+    spotify_agent: AgentExecutor = planner.create_openapi_agent(
+        manager._spec,
+        requests_wrapper,
+        llm,
+        # https://github.com/langchain-ai/langchain/pull/19493
+        allow_dangerous_requests=True,
+    )
+    spotify_agent
+    print(spotify_agent)
+    print(len(spotify_agent.tools))
+
+    import ipdb
+
+    ipdb.set_trace()
+    user_query = "give me a song I'd like, make it blues-ey (answer shortly)"
+    # openai.BadRequestError: Error code: 400 - {'error': {'message': "This model's maximum context length is 16384 tokens. However, your messages resulted in 27000 tokens. Please reduce the length of the messages.", 'type': 'invalid_request_error', 'param': 'messages', 'code': 'context_length_exceeded'}}
+    response = spotify_agent.invoke(user_query)
+    print(response)
 
     import ipdb
 
