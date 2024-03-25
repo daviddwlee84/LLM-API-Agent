@@ -1,6 +1,8 @@
-# LLM-API-Agent
+# LLM API Agent
 
-Creating tools for LLM so it can call API by itself and finish complex tasks
+Creating tools for LLM so it can call API by itself and finish complex tasks.
+
+Good example of how to play with Agents, Tools, etc.
 
 ## Getting Started
 
@@ -15,6 +17,38 @@ cp example.env .env
 # Adhoc
 python ./utils/api.py
 ```
+
+## Todos
+
+Infrastructure
+
+- [X] OpenAPI document to API Agent
+- [ ] General API document (e.g. using web crawler)
+- [ ] Self-building API call function as tool
+
+Learning
+
+- [ ] Understand LangGraph
+
+Bug
+
+- [ ] Fix agent executor intermediate output exceed max token length limit issue
+
+Tasks
+
+- [ ] Spotify Agent
+  - [X] Basic Spotify API call based on OpenAPI document
+    - [X] Change it to notebook
+    - [ ] Fix bug
+  - [ ] JSON agent
+- [ ] Financial Agent
+  - [ ] Simple Polygon
+    - [ ] Fix bug
+  - [ ] LangGraph + Polygon
+
+Other
+
+- [ ] Build UI to play with each of them (if there is stable playable example)
 
 ## Resources
 
@@ -41,6 +75,14 @@ Template
   - [hwchase17/langchain-hub](https://github.com/hwchase17/langchain-hub)
 - [openai-functions-agent | 🦜️🔗 Langchain](https://python.langchain.com/docs/templates/openai-functions-agent)
   - [langchain/templates/openai-functions-agent at master · langchain-ai/langchain](https://github.com/langchain-ai/langchain/tree/master/templates/openai-functions-agent)
+
+LangGraph
+
+- [🦜🕸️LangGraph | 🦜️🔗 Langchain](https://python.langchain.com/docs/langgraph)
+- [LangGraph: Multi-Agent Workflows](https://blog.langchain.dev/langgraph-multi-agent-workflows/)
+  - [LangGraph: Multi-Agent Workflows - YouTube](https://www.youtube.com/watch?v=hvAPnpSfSGo)
+- [Future of Coding — Multi-Agent LLM Framework using LangGraph | by Anurag Mishra | Mar, 2024 | Medium](https://medium.com/@anuragmishra_27746/future-of-coding-multi-agent-llm-framework-using-langgraph-092da9493663)
+- [LangGraph](https://blog.langchain.dev/langgraph/)
 
 ### Papers
 
