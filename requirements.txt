@@ -1,3 +1,7 @@
 langchain
+langchain-openai
+langchain-community
 tiktoken
 ipdb
+python-dotenv
+spotipy

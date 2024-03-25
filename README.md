@@ -6,6 +6,16 @@ Creating tools for LLM so it can call API by itself and finish complex tasks
 
 Python 3.10+
 
+```bash
+pip install -r requirements.txt
+
+# Fill your credential
+cp example.env .env
+
+# Adhoc
+python ./utils/api.py
+```
+
 ## Resources
 
 ### LangChain
