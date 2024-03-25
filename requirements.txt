@@ -1,6 +1,7 @@
 langchain
 langchain-openai
 langchain-community
+langchainhub
 tiktoken
 ipdb
 python-dotenv
